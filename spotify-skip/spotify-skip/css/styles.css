@@ -1,0 +1,142 @@
+* {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    color: #495057;
+}
+
+body {
+    width: 300px;
+}
+
+label {
+    margin-top: 10px;
+}
+
+input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ced4da;
+    margin-top: 5px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+input:focus {
+    outline: 0;
+    border-color: #53afff;
+}
+
+.top-margin {
+    margin-top: 5px;
+}
+
+.round {
+    border-radius: .25rem;
+    padding: .25rem .5rem;
+}
+
+.btn {
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn-neutral {
+    background-color: #1589ee;
+    border: 1px solid #1589ee;
+}
+
+.btn-neutral:hover {
+    background-color: #0b7fe4;
+    border: 1px solid #0b7fe4;
+}
+
+#title {
+    padding: 5px;
+    text-align: center;
+    border-bottom: 3px solid #1589ee;
+    margin-bottom: 10px;
+}
+
+#message {
+    float: right;
+    color: #7dc37d;
+    display: none;
+}
+
+#seconds {
+    display: flex;
+    justify-content: space-between;
+}
+
+#seconds div {
+    width: 49%;
+}
+
+#save {
+    margin-top: 15px;
+}
+
+#status {
+    display: flex;
+    justify-content: center;
+}
+
+.toggle {
+    position: relative;
+    display: block;
+    width: 42px;
+    height: 24px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transform: translate3d(0, 0, 0);
+}
+.toggle:before {
+    content: "";
+    position: relative;
+    top: 1px;
+    left: 1px;
+    width: 40px;
+    height: 22px;
+    display: block;
+    background: #c8ccd4;
+    border-radius: 12px;
+    transition: background 0.2s ease;
+}
+.toggle span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    display: block;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(154,153,153,0.75);
+    transition: all 0.2s ease;
+}
+.toggle span svg {
+    margin: 7px;
+    fill: none;
+}
+.toggle span svg path {
+    stroke: #c8ccd4;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 24;
+    stroke-dashoffset: 0;
+    transition: all 0.5s linear;
+}
+#cbx:checked + .toggle:before {
+    background: #52d66b;
+}
+#cbx:checked + .toggle span {
+    transform: translateX(18px);
+}
+#cbx:checked + .toggle span path {
+    stroke: #52d66b;
+    stroke-dasharray: 25;
+    stroke-dashoffset: 25;
+}

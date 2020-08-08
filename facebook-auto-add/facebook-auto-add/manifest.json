@@ -1,0 +1,23 @@
+{
+    "manifest_version": 2,
+    "name": "Extension Template",
+    "description": "Chrome Extension Basic Template",
+    "version": "1",
+    "browser_action": {
+        "default_popup": "popup.html"
+    },
+    "icons": {
+        "16": "img/icon16.png",
+        "48": "img/icon48.png",
+        "128": "img/icon128.png"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["js/jquery-3.3.1.min.js", "js/content.js"]
+        }
+    ],
+    "permissions": [
+        "tabs"
+    ]
+}
