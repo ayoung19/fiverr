@@ -2,14 +2,14 @@ var count = 0;
 var same_word = "";
 var same_time = 0;
 
-chrome.storage.local.get("spotify-bot-on", function (result) {
+chrome.storage.sync.get("spotify-bot-on", function (result) {
     if (result["spotify-bot-on"] == true) {
         setTimeout(load, 1000);
     }
 });
 
 function load() {
-    chrome.storage.local.get("spotify-bot-settings", function (result) {
+    chrome.storage.sync.get("spotify-bot-settings", function (result) {
         if (result["spotify-bot-settings"] != undefined && valid(result["spotify-bot-settings"])) {
             var lower = parseInt(result["spotify-bot-settings"][0]);
             var upper = parseInt(result["spotify-bot-settings"][1]);
@@ -46,8 +46,8 @@ function load() {
                     document.querySelector(".playback-bar div").innerHTML = "0:00";
                     random = getRandomInt(lower, upper);
 
-                    chrome.storage.local.get("spotify-bot-skips", function (result2) {
-                        chrome.storage.local.set({ "spotify-bot-skips": result2["spotify-bot-skips"] + 1 }, function () { });
+                    chrome.storage.sync.get("spotify-bot-skips", function (result2) {
+                        chrome.storage.sync.set({ "spotify-bot-skips": result2["spotify-bot-skips"] + 1 }, function () { });
                     });
                 }
             }, 100);

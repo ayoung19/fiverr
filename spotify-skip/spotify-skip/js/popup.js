@@ -1,8 +1,8 @@
-chrome.storage.local.get("spotify-bot-on", function (result) {
+chrome.storage.sync.get("spotify-bot-on", function (result) {
     change(result["spotify-bot-on"]);
 });
 
-chrome.storage.local.get("spotify-bot-time", function (result) {
+chrome.storage.sync.get("spotify-bot-time", function (result) {
     var notify_time = result["spotify-bot-time"][0].split(":");
 
     document.querySelector("#time").value = result["spotify-bot-time"][0];
@@ -17,7 +17,7 @@ chrome.storage.local.get("spotify-bot-time", function (result) {
     })
 });
 
-chrome.storage.local.get("spotify-bot-settings", function (result) {
+chrome.storage.sync.get("spotify-bot-settings", function (result) {
     console.log(result)
     document.querySelector("#lower").value = result["spotify-bot-settings"][0];
     document.querySelector("#upper").value = result["spotify-bot-settings"][1];
@@ -26,11 +26,11 @@ chrome.storage.local.get("spotify-bot-settings", function (result) {
 
 document.querySelector(".toggle").onclick = function() {
     if (document.querySelector("#cbx").checked) {
-        chrome.storage.local.set({ "spotify-bot-on": false }, function () { });
+        chrome.storage.sync.set({ "spotify-bot-on": false }, function () { });
         chrome.browserAction.setBadgeText({ text: "Off" });
         chrome.browserAction.setBadgeBackgroundColor({ color: "#c23934" });
     } else {
-        chrome.storage.local.set({ "spotify-bot-on": true }, function () { });
+        chrome.storage.sync.set({ "spotify-bot-on": true }, function () { });
         chrome.browserAction.setBadgeText({ text: "On" });
         chrome.browserAction.setBadgeBackgroundColor({ color: "#7dc37d" });
     }
@@ -38,9 +38,9 @@ document.querySelector(".toggle").onclick = function() {
 
 document.querySelector("#save").onclick = function() {
     var arr = [document.querySelector("#lower").value, document.querySelector("#upper").value, document.querySelector("#webhook").value];
-    chrome.storage.local.set({ "spotify-bot-settings": arr }, function () {
-        chrome.storage.local.get("spotify-bot-time", function (result) {
-            chrome.storage.local.set({ "spotify-bot-time": [document.querySelector("#time").value, result["spotify-bot-time"][1]] }, function () {
+    chrome.storage.sync.set({ "spotify-bot-settings": arr }, function () {
+        chrome.storage.sync.get("spotify-bot-time", function (result) {
+            chrome.storage.sync.set({ "spotify-bot-time": [document.querySelector("#time").value, result["spotify-bot-time"][1]] }, function () {
                 chrome.runtime.sendMessage({ type: "reload"});
                 document.querySelector("#save").innerHTML = "Saved!"
             });
