@@ -1,0 +1,22 @@
+{
+    "manifest_version": 2,
+    "name": "Stopwatch",
+    "description": "Stopwatch",
+    "version": "1",
+    "browser_action": {
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": ["*://*.search.yahoo.com/*"],
+            "js": ["js/content.js"]
+        }
+    ],
+    "background": {
+        "scripts": ["js/background.js"],
+        "persistent": true
+    },
+    "permissions": [
+        "storage"
+    ]
+}
