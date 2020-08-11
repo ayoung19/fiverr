@@ -8,9 +8,9 @@ chrome.runtime.onMessage.addListener(function (msg) {
 });
 
 function init_on() {
-    chrome.storage.sync.get("stopwatch-on", function (result) {
+    chrome.storage.local.get("stopwatch-on", function (result) {
         if (result["stopwatch-on"] == undefined) {
-            chrome.storage.sync.set({ "stopwatch-on": false }, function () {
+            chrome.storage.local.set({ "stopwatch-on": false }, function () {
                 init_time();
             });
         } else {
@@ -20,9 +20,9 @@ function init_on() {
 }
 
 function init_time() {
-    chrome.storage.sync.get("stopwatch-time", function (result) {
+    chrome.storage.local.get("stopwatch-time", function (result) {
         if (result["stopwatch-time"] == undefined) {
-            chrome.storage.sync.set({ "stopwatch-time": 0 }, function () {
+            chrome.storage.local.set({ "stopwatch-time": 0 }, function () {
                 init_rph();
             });
         } else {
@@ -32,9 +32,9 @@ function init_time() {
 }
 
 function init_rph() {
-    chrome.storage.sync.get("stopwatch-th", function (result) {
+    chrome.storage.local.get("stopwatch-th", function (result) {
         if (result["stopwatch-th"] == undefined) {
-            chrome.storage.sync.set({ "stopwatch-th": 0 }, function () {
+            chrome.storage.local.set({ "stopwatch-th": 0 }, function () {
                 load();
             });
         } else {
@@ -44,12 +44,12 @@ function init_rph() {
 }
 
 function load() {
-    chrome.storage.sync.get("stopwatch-on", function (result) {
+    chrome.storage.local.get("stopwatch-on", function (result) {
         if (result["stopwatch-on"] == true) {
             interval = setInterval(function() {
-                chrome.storage.sync.get("stopwatch-time", function (result) {
+                chrome.storage.local.get("stopwatch-time", function (result) {
                     console.log(result["stopwatch-time"] + 1);
-                    chrome.storage.sync.set({ "stopwatch-time": result["stopwatch-time"] + 1 }, function () { });
+                    chrome.storage.local.set({ "stopwatch-time": result["stopwatch-time"] + 1 }, function () { });
                 });
             }, 1000);
         } else {

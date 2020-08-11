@@ -3,7 +3,7 @@ var interval;
 load();
 
 function load() {
-    chrome.storage.sync.get("stopwatch-time", function (result) {
+    chrome.storage.local.get("stopwatch-time", function (result) {
         var time = result["stopwatch-time"];
         document.querySelector("#tiempoCero").innerHTML = time;
         init_th(time);
@@ -11,7 +11,7 @@ function load() {
 }
 
 function init_th(time) {
-    chrome.storage.sync.get("stopwatch-th", function (result) {
+    chrome.storage.local.get("stopwatch-th", function (result) {
         document.querySelector("#tareasCero").innerHTML = result["stopwatch-th"];
         
         if (result["stopwatch-th"] == 0) {
@@ -25,7 +25,7 @@ function init_th(time) {
 }
 
 function stopwatch(time) {
-    chrome.storage.sync.get("stopwatch-on", function (result) {
+    chrome.storage.local.get("stopwatch-on", function (result) {
         if (result["stopwatch-on"] == true) {
             interval = setInterval(function () {
                 time++;
@@ -37,7 +37,7 @@ function stopwatch(time) {
 }
 
 document.querySelector("#start").onclick = function() {
-    chrome.storage.sync.set({ "stopwatch-on": true }, function () {
+    chrome.storage.local.set({ "stopwatch-on": true }, function () {
         chrome.runtime.sendMessage({ type: "reload" }, function() {
             load();
         });
@@ -45,7 +45,7 @@ document.querySelector("#start").onclick = function() {
 }
 
 document.querySelector("#stop").onclick = function () {
-    chrome.storage.sync.set({ "stopwatch-on": false }, function () {
+    chrome.storage.local.set({ "stopwatch-on": false }, function () {
         chrome.runtime.sendMessage({ type: "reload" }, function() {
             clearInterval(interval);
         });
@@ -53,9 +53,9 @@ document.querySelector("#stop").onclick = function () {
 }
 
 document.querySelector("#reset").onclick = function () {
-    chrome.storage.sync.set({ "stopwatch-on": false }, function () {
-        chrome.storage.sync.set({ "stopwatch-time": 0 }, function () {
-            chrome.storage.sync.set({ "stopwatch-th": 0 }, function () {
+    chrome.storage.local.set({ "stopwatch-on": false }, function () {
+        chrome.storage.local.set({ "stopwatch-time": 0 }, function () {
+            chrome.storage.local.set({ "stopwatch-th": 0 }, function () {
                 chrome.runtime.sendMessage({ type: "reload" }, function () {
                     clearInterval(interval);
                     document.querySelector("#tiempoCero").innerHTML = 0;
