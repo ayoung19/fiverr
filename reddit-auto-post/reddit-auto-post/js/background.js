@@ -1,3 +1,9 @@
+chrome.storage.sync.get("reddit-poster-settings", function (result) {
+    if (result["reddit-poster-settings"] == undefined) {
+        chrome.storage.sync.set({ "reddit-poster-settings": ["", ""] }, function () { });
+    }
+});
+
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     if (msg.type == "open-window") {
         window.open("https://www.reddit.com");
@@ -9,7 +15,10 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     }
 
     if(msg.type == "restart") {
-        start_script(sender.tab.id, getRandomInt(450000, 500000));
+        chrome.storage.sync.get("reddit-poster-settings", function (result) {
+            console.log(parseInt(result["reddit-poster-settings"][0]) * 60000, parseInt(result["reddit-poster-settings"][1]) * 60000)
+            start_script(sender.tab.id, getRandomInt(parseFloat(result["reddit-poster-settings"][0]) * 60000, parseFloat(result["reddit-poster-settings"][1]) * 60000));
+        });
     }
 });
 

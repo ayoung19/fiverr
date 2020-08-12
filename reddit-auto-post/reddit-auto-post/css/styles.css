@@ -1,4 +1,83 @@
+* {
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    color: #495057;
+}
+
 body {
     width: 300px;
-    height: 300px;
+}
+
+label {
+    margin-top: 10px;
+}
+
+input {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ced4da;
+    margin-top: 5px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+input:focus {
+    outline: 0;
+    border-color: #53afff;
+}
+
+.round {
+    border-radius: .25rem;
+    padding: .25rem .5rem;
+}
+
+.top-margin {
+    margin-top: 5px;
+}
+
+.btn {
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn-success {
+    background-color: #4bc076;
+    border: 1px solid #4bc076;
+}
+
+.btn-success:hover {
+    background-color: #41b66c;
+    border: 1px solid #41b66c;
+}
+
+.btn-neutral {
+    background-color: #1589ee;
+    border: 1px solid #1589ee;
+}
+
+.btn-neutral:hover {
+    background-color: #0b7fe4;
+    border: 1px solid #0b7fe4;
+}
+
+#title {
+    padding: 5px;
+    text-align: center;
+    border-bottom: 3px solid #1589ee;
+    margin-bottom: 10px;
+}
+
+#seconds {
+    display: flex;
+    justify-content: space-between;
+}
+
+#seconds div {
+    width: 49%;
+}
+
+#save {
+    margin-top: 15px;
 }
