@@ -1,3 +1,25 @@
+document.querySelector("#login-button").onclick = function () {
+    window.open("https://belajarshopee.com/membership-login/");
+}
+
+getCookies("https://belajarshopee.com/", "wordpress_logged_in_44b290cbb6517f1d7ea65c00d31ead09", function (id) {
+    if (id != "err") {
+        document.getElementById("login").style.display = "block";
+    } else {
+        document.getElementById("not-login").style.display = "block";
+    }
+});
+
+function getCookies(domain, name, callback) {
+    chrome.cookies.get({ "url": domain, "name": name }, function (cookie) {
+        if (callback && cookie != null) {
+            callback(cookie.value)
+        } else {
+            callback("err")
+        }
+    });
+}
+
 chrome.storage.local.get("store-title-counts", function (result) {
     var map = result["store-title-counts"];
     if(map == undefined) {
@@ -30,8 +52,6 @@ function load_table(map) {
 
         table_body.push(table_entry);
     }
-
-    console.log(table_body);
 
     var hot_element = document.querySelector('#hot');
     var hot_settings = {

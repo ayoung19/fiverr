@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
-    "name": "Store Title Scraper",
-    "description": "Store Title Scraper",
+    "name": "Find Title Scraper",
+    "description": "Find Title Scraper",
     "version": "1",
     "browser_action": {
         "default_popup": "popup.html"
@@ -13,6 +13,8 @@
         }
     ],
     "permissions": [
-        "storage"
+        "storage",
+        "cookies",
+        "https://belajarshopee.com/"
     ]
 }

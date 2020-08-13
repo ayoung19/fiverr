@@ -14,16 +14,16 @@ function load(class_name) {
 
             for (var j = 0; j < words.length; j++) {
                 var word = words[j].toLowerCase();
-                if (map[word] == undefined) {
-                    map[word] = 1;
-                } else {
-                    map[word]++;
+                if(word.indexOf("#") == -1) {
+                    if (map[word] == undefined) {
+                        map[word] = 1;
+                    } else {
+                        map[word]++;
+                    }
                 }
             }
         }
 
         chrome.storage.local.set({ "store-title-counts": map }, function () { });
-
-        // console.log(titles.length, map);
     });
 }

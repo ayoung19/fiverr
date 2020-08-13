@@ -7,9 +7,17 @@
     </head>
 
     <body>
-        <div id="hot" style="width: 100%; margin-bottom: 10px;"></div>
-        <div style="text-align: center;">
-            <button class="btn size-medium bg-blue text-white shadow hover-moveup" id="export-to-csv">Download CSV File</button>
+        <img src="images/logo.jpg" />
+        <div id="login" style="display: none;">
+            <div id="hot" style="width: 100%; margin-bottom: 10px;"></div>
+            <div style="text-align: center;">
+                <button class="btn size-medium bg-blue text-white shadow hover-moveup" id="export-to-csv">Download CSV File</button>
+            </div>
+        </div>
+        <div id="not-login" style="display: none;">
+            <div style="text-align: center; margin-top: 20px;">
+                <button class="btn size-medium bg-blue text-white shadow hover-moveup" id="login-button">Login</button>
+            </div>
         </div>
         <script src="js/popup.js"></script>
     </body>

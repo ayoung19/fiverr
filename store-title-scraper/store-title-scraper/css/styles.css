@@ -2,5 +2,8 @@
 
 body {
     width: 700px;
-    height: 300px;
+}
+
+img {
+    width: 100%;
 }
