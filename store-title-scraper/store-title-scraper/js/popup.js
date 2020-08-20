@@ -1,8 +1,8 @@
 document.querySelector("#login-button").onclick = function () {
-    window.open("https://belajarshopee.com/membership-login/");
+    window.open("https://ftshopee.com/membership-login/");
 }
 
-getCookies("https://belajarshopee.com/", "wordpress_logged_in_44b290cbb6517f1d7ea65c00d31ead09", function (id) {
+getCookies("https://ftshopee.com/", "wordpress_logged_in_184b3402c74c1cf02102c20c3fd4a4a2", function (id) {
     if (id != "err") {
         document.getElementById("login").style.display = "block";
     } else {

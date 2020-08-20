@@ -2,6 +2,8 @@ if(window.location.href.indexOf("shopee") != -1) {
     load("._1NoI8_");
 } else if(window.location.href.indexOf("lazada") != -1) {
     load(".c16H9d");
+} else if(window.location.href.indexOf("youtube") != -1) {
+    load("#video-title")
 }
 
 function load(class_name) {
