@@ -4,7 +4,7 @@
 <head>
     <title>WORK_COUNTER</title>
 </head>
-<body>
+<body style="background-color:black">
 <style type="text/css">
     body {
         width: 180px;
@@ -12,16 +12,21 @@
     }
 </style>
 
-<div style="text-align: center;">
-    <b> tareas hechas </b>
-    <p id="tareasCero"> 0 </p>
-    <p> tiempo trabajado </p>
-    <p id="tiempoCero">  00:00:00 </p>
-    <b> -RPH- </b>
-    <p id="rph"> 0 </p>
-    <button id="start">Start</button>
-    <button id="stop">Stop</button>
-    <button id="reset">Reset</button>
+<div style="text-align: center; background-color:black">
+    <b style="font-size:17px; color:#D1CA00"> -Tareas hechas- </b>
+    <hr>
+    <p id="tareasCero"; style="font-size:16px; color:deepskyblue"> 0 <span> </p>
+    <div> <button id="add_one" style="background-color:blue; color:white">+</button> </div>
+    <div> <button id="subtract_one" style="background-color:blue; color:white">-</button> </div>   
+    <b style="font-size:16px; color:#D1CA00"> -Tiempo trabajado- </b>
+    <hr>
+    <p id="tiempoCero"; style="font-size:16px; color:deepskyblue">  00:00:00 </p>
+    <b style="font-size:20px; color:#D1CA00"> -RPH- </b>
+    <hr>
+    <p id="rph"; style="font-size:16px; color:deepskyblue"> 0 </p>
+    <button id="start" style="background-color:darkblue; color:white">Start</button>
+    <button id="stop" style="background-color:darkblue; color:white">Stop</button>
+    <button id="reset" style="background-color:darkblue; color:white">Reset</button>
 </div>
 <script src="js/popup.js"></script>
 <br>

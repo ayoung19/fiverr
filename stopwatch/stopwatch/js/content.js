@@ -8,6 +8,7 @@ function load() {
             document.querySelector(".submitTaskButton").addEventListener("mousedown", function () {
                 chrome.storage.local.get("stopwatch-th", function (result) {
                     chrome.storage.local.set({ "stopwatch-th": result["stopwatch-th"] + 1 }, function () { });
+                    chrome.runtime.sendMessage({ type: "play" }, function () { });
                     setTimeout(function() {
                         load();
                     }, 4000);

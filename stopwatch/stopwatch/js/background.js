@@ -1,9 +1,23 @@
 var interval;
+var audio = document.createElement('audio');
+var source = document.createElement('source');
+
+audio.setAttribute("preload", "auto");
+audio.autobuffer = true;
+
+source.type = 'audio/mpeg';
+source.src = '../task-counted.mp3';
+
+audio.appendChild(source);
+audio.load;
+
 init_on();
 
 chrome.runtime.onMessage.addListener(function (msg) {
     if (msg.type == "reload") {
         load();
+    } else if(msg.type == "play") {
+        audio.play();
     }
 });
 
