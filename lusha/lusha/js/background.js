@@ -1,3 +1,9 @@
+chrome.storage.sync.get("profile-data", function (result) {
+    if (result["profile-data"] == undefined) {
+        chrome.storage.sync.set({ "profile-data": null }, function () {});
+    }
+});
+
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     if (msg.type == "scrape") {
         var payload = new FormData();
@@ -11,10 +17,15 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
         })
         .then(res => res.json())
         .then(body => {
-            if(body.status == "html_required") {
-                chrome.tabs.sendMessage(sender.tab.id, { type: "get_html" });
+            if(body.contacts == undefined) {
+                if (body.status == "html_required") {
+                    chrome.tabs.sendMessage(sender.tab.id, { type: "get_html" });
+                } else {
+                    chrome.storage.sync.set({ "profile-data": null }, function () { });
+                }
+            } else {
+                chrome.storage.sync.set({ "profile-data": body.contacts[0] }, function () { });
             }
-            console.log(body);
         })
         .catch(err => {
             console.log(err);

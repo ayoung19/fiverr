@@ -13,7 +13,8 @@
         }
     ],
     "permissions": [
-        "https://services.leadcloud.fi/olli_test_api/"
+        "https://services.leadcloud.fi/olli_test_api/",
+        "storage"
     ],
     "background": {
         "scripts": ["js/background.js"],
