@@ -70,12 +70,23 @@ a:hover {
     font-weight: 500;
 }
 
+#company {
+    color: #757575;
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+}
+
 #website {
     display: flex;
     align-items: center;
     color: #007bff;
     font-size: 1rem;
     font-weight: 500;
+}
+
+#logo {
+    height: 50px;
 }
 
 #description {
