@@ -1,20 +1,21 @@
 {
     "manifest_version": 2,
-    "name": "Lusha",
-    "description": "Lusha",
+    "name": "Profinder",
+    "description": "Profinder",
     "version": "1",
     "browser_action": {
         "default_popup": "popup.html"
     },
     "content_scripts": [
         {
-            "matches": ["*://*.linkedin.com/*"],
+            "matches": ["<all_urls>"],
             "js": ["js/content.js"]
         }
     ],
     "permissions": [
         "https://services.leadcloud.fi/olli_test_api/",
-        "storage"
+        "storage",
+        "tabs"
     ],
     "background": {
         "scripts": ["js/background.js"],

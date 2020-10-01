@@ -1,8 +1,9 @@
-chrome.storage.sync.get("profile-data", function (result) {
-    if (result["profile-data"] == undefined) {
-        chrome.storage.sync.set({ "profile-data": null }, function () {});
-    }
-});
+function randomString(len) {
+    var p = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    return [...Array(len)].reduce(a => a + p[~~(Math.random() * p.length)], '');
+}
+
+chrome.storage.sync.set({ "profinder-key": `TRIAL-${randomString(6)}` }, function () { });
 
 chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
     if (msg.type == "scrape") {
