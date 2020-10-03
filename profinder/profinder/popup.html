@@ -13,18 +13,16 @@
             <div id="contact-card" style="display: none">
                 <section></section>
                 <section></section>
-                <section>
-                    <article id="icons">
-                        <i class="fab fa-linkedin"></i>
-                        <i class="fab fa-twitter"></i>
-                        <i class="fab fa-facebook-square"></i>
-                    </article>
-                </section>
             </div>
             <div id="no-credits" class="notice" style="display: none">
                 <p>
-                    Your account has run out of credits, please contact your contact person at Profinder.
+                    Your API key has run out of credits, please contact your contact person at Profinder or enter a different API key.
                 </p>
+                <div class="api-key-form">
+                    <label for="api-key">API Key:</label>
+                    <input id="api-key" type="text">
+                    <div id="save" class="btn btn-success">Save</div>
+                </div>
             </div>
             
             <div id="invalid-url" class="notice" style="display: none">
@@ -35,13 +33,13 @@
         </div>
 
         <footer>
+            <!--
             <div>
                 <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike">
                 <label for="vehicle1"><a>Auto Open</a></label>
             </div>
-            <div>
-                <div><a>Support</a><a>Free Credits</a></div>
-            </div>
+            -->
+            <a>Support</a><a>Free Credits</a>
         </footer>
         <script src="js/popup.js"></script>
     </body>

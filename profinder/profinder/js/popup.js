@@ -1,5 +1,5 @@
 function show(id) {
-    document.querySelectorAll("#content div").forEach(function(item) {
+    Array.from(document.querySelector("#content").children).forEach(function(item) {
         if(item.id == id) {
             item.style.display = "block";
         } else {
@@ -24,7 +24,7 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                 console.log(body);
                 if (body.contacts == undefined) {
                     if (body.status == "html_required") {
-                        chrome.tabs.sendMessage(tabs[0].id, { type: "get_html" });
+                        //chrome.tabs.sendMessage(tabs[0].id, { type: "get_html" });
                     } else {
                         show("no-credits");
                     }
@@ -34,19 +34,52 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                     var section1 = document.querySelectorAll("section")[0];
                     var section2 = document.querySelectorAll("section")[1];
                     var section3 = document.querySelectorAll("section")[2];
+                    var icons = document.querySelector("#icons");
+                    
 
 
                     if (data.person.firstname != null && data.person.lastname != null) {
                         section1.innerHTML += 
                         `<article>
-                            <h2>${data.person.firstname} ${data.person.lastname}</h2>
+                            <div class="header">
+                                <h2>${data.person.firstname} ${data.person.lastname}</h2>
+                            </div>
                         </article>`;
                     }
 
                     if (data.person.email != null) {
                         section1.innerHTML +=
                         `<article>
-                            <h4><i class="far fa-envelope"></i><a href="mailto:${data.person.email}">${data.person.email}</a></h4>
+                            <div class="header">
+                                <div class="tag">Work</div><h4 class="indented"><a href="mailto:${data.person.email}">${data.person.email}</a></h4>
+                            </div>
+                        </article>`;
+                    }
+
+                    if (data.person.email2 != null) {
+                        section1.innerHTML +=
+                        `<article>
+                            <div class="header">
+                                <div class="tag">Private</div><h4 class="indented"><a href="mailto:${data.person.email2}">${data.person.email2}</a></h4>
+                            </div>
+                        </article>`;
+                    }
+
+                    if (typeof data.person.phone == "string") {
+                        section1.innerHTML +=
+                        `<article>
+                            <div class="header">
+                                <div class="tag">Phone 1</div><h4 class="indented"><a href="tel:${data.person.phone}">${data.person.phone}</a></h4>
+                            </div>
+                        </article>`;
+                    }
+
+                    if (typeof data.person.phone2 == "string") {
+                        section1.innerHTML +=
+                        `<article>
+                            <div class="header">
+                                <div class="tag">Phone 2</div><h4 class="indented"><a href="tel:${data.person.phone2}">${data.person.phone2}</a></h4>
+                            </div>
                         </article>`;
                     }
 
@@ -54,49 +87,113 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                         section1.remove();
                     }
 
-                    if (typeof data.person.phone == "string") {
+                    if (data.company.name != null) {
                         section2.innerHTML +=
                         `<article>
-                            <h4><i class="fas fa-phone"></i><a href="tel:${data.person.phone}">${data.person.phone}</a></h4>
-                        </article>`;
-                    }
-
-                    if (section2.innerText.length == 0) {
-                        section2.remove();
-                    }
-
-                    if (data.company.name != null) {
-                        section3.innerHTML +=
-                        `<article>
-                            <h2>${data.company.name}</h2>
+                            <div class="header">
+                                <h2>${data.company.name}</h2>
+                            </div>
                         </article>`;
                     }
 
                     if (typeof data.company.companyUrl == "string" && data.company.companyUrl.length > 0) {
-                        section3.innerHTML +=
+                        section2.innerHTML +=
                         `<article>
-                            <h4><i class="fas fa-globe"></i><a target="_blank" href="${data.company.companyUrl}">${data.company.companyUrl}</a></h4>
+                            <div class="header">
+                                <h4><a target="_blank" href="http://${data.company.companyUrl}">${data.company.companyUrl}</a></h4>
+                            </div>
                         </article>`;
                     }
 
                     if (typeof data.company.logo == "string" && data.company.logo.length > 0) {
-                        section3.innerHTML +=
+                        section2.innerHTML +=
                         `<article>
                             <img height="50" src="${data.company.logo}" />
                         </article>`;
                     }
 
-                    if (typeof data.company.founded == "string" && data.company.founded.length > 0) {
-                        section3.innerHTML +=
+                    if (typeof data.company.overview == "string" && data.company.overview.length > 0) {
+                        section2.innerHTML +=
                         `<article>
-                            <h4>Founded: ${data.company.founded}</h4>
+                            <div class="header"><i class="fas fa-info-circle"></i><h6>About</h6></div>
+                            <div class="body">
+                                <p>${data.company.overview}</p>
+                            </div>
                         </article>`;
                     }
 
-                    if (section3.innerText.length == 0) {
-                        section3.remove();
+                    if (typeof data.company.personnel == "string" && data.company.personnel.length > 0) {
+                        section2.innerHTML +=
+                            `<article>
+                            <div class="header"><i class="fas fa-users"></i><h6>Employees</h6></div>
+                            <div class="body">
+                                <p>${data.company.personnel}</p>
+                            </div>
+                        </article>`;
                     }
 
+                    if (typeof data.company.tolMainLineofBusinessName == "string" && data.company.tolMainLineofBusinessName.length > 0) {
+                        section2.innerHTML +=
+                            `<article>
+                            <div class="header"><i class="fas fa-industry"></i><h6>Main Industry</h6></div>
+                            <div class="body">
+                                <p>${data.company.tolMainLineofBusinessName}</p>
+                            </div>
+                        </article>`;
+                    }
+
+                    var address = "";
+                    
+                    if (typeof data.company.address == "string" && data.company.address.length > 0) {
+                        address += data.company.address;
+                        
+                        if (typeof data.company.postalcode == "string" && data.company.postalcode.length > 0) {
+                            address += `<br />${data.company.postalcode}`;
+
+                            if (typeof data.company.city == "string" && data.company.city.length > 0) {
+                                address += ` ${data.company.city}`;
+                            }
+                        }
+
+                        section2.innerHTML +=
+                        `<article>
+                            <div class="header"><i class="fas fa-location-arrow"></i><h6>Headquarters</h6></div>
+                            <div class="body">
+                                <p>${address}</p>
+                            </div>
+                        </article>`;
+                    }
+
+                    if (typeof data.company.founded == "string" && data.company.founded.length > 0) {
+                        section2.innerHTML +=
+                        `<article>
+                            <div class="header"><i class="fas fa-flag"></i><h6>Founded</h6></div>
+                            <div class="body">
+                                <p>${data.company.founded}</p>
+                            </div>
+                        </article>`;
+                    }
+
+                    section2.innerHTML += `<article id="icons"></article>`;
+
+                    var icons = document.querySelector("#icons");
+
+                    if (typeof data.company.facebook == "string" && data.company.facebook.length > 0) {
+                        icons.innerHTML += `<a href="https://${data.company.facebook}" target="_blank"><i class="fab fa-facebook-square"></i></a>`;
+                    }
+
+                    if (typeof data.company.linkedin == "string" && data.company.linkedin.length > 0) {
+                        icons.innerHTML += `<a href="https://${data.company.linkedin}" target="_blank"><i class="fab fa-linkedin"></i></a>`;
+                    }
+
+                    if (icons.children.length == 0) {
+                        icons.remove();
+                    }
+
+                    if (section2.innerText.length == 0) {
+                        section2.remove();
+                    }
+                    
                     show("contact-card");
                 }
             })
@@ -109,22 +206,20 @@ chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
     }
 });
 
-document.querySelectorAll(".fa-phone").forEach(function(item, index) {
-    if (index > 0) {
-        item.style.color = "white";
+document.querySelector("#api-key").addEventListener("keypress", function (e) {
+    if (e.code == "Enter") {
+        save();
     }
 });
 
-/*
-chrome.storage.sync.get("profile-data", function (result) {
-    var data = result["profile-data"];
-    console.log(data);
-    document.querySelector("#name").innerHTML = `${data.person.firstname} ${data.person.lastname}`;
-    document.querySelector("#email-value").innerHTML = `${data.person.email}`;
-    document.querySelector("#phone-value").innerHTML = `${data.person.phone}`
-    document.querySelector("#company").innerHTML = `${data.company.name}`
-    document.querySelector("#website-value").innerHTML = `${data.company.companyUrl}`
-    document.querySelector("#website-value").href = `https://${data.company.companyUrl}`
-    document.querySelector("#founded").innerHTML = `${data.company.founded}`
+document.querySelector("#save").addEventListener("click", function () {
+    save();
 });
-*/
+
+function save() {
+    if (document.querySelector("#api-key").value.length > 0) {
+        chrome.storage.sync.set({ "profinder-key": document.querySelector("#api-key").value }, function () {
+            window.close();
+        });
+    }
+}
