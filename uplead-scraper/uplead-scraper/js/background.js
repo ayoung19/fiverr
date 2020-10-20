@@ -9,7 +9,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
             chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                 chrome.tabs.sendMessage(tabs[0].id, { action: "open-link" }, function (response) { });
             });
-        }, getRandomInt(2000, 4000));
+        }, 2000);
     }
 
     if (msg.action == "opened-link" && running) {
@@ -17,7 +17,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
             chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                 chrome.tabs.sendMessage(tabs[0].id, { action: "scrape" }, function (response) { });
             });
-        }, getRandomInt(2000, 4000));
+        }, 3000);
     }
 
     if (msg.action == "scraped" && running) {
@@ -25,7 +25,7 @@ chrome.runtime.onMessage.addListener(function (msg, sender, sendResponse) {
             chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                 chrome.tabs.sendMessage(tabs[0].id, { action: "open-link" }, function (response) { });
             });
-        }, getRandomInt(500, 1000));
+        }, 1000);
     }
 
     if (msg.action == "stop") {
