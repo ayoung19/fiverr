@@ -1,0 +1,20 @@
+{
+    "manifest_version": 2,
+    "name": "CSS Customizer",
+    "description": "CSS Customizer",
+    "version": "1",
+    "browser_action": {
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["js/content.js"],
+            "css": ["css/content.css"]
+        }
+    ],
+    "background": {
+        "scripts": ["js/background.js"],
+        "persistent": true
+    }
+}
