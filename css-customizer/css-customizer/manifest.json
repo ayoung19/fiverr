@@ -10,11 +10,14 @@
         {
             "matches": ["<all_urls>"],
             "js": ["js/content.js"],
-            "css": ["css/content.css"]
+            "run_at": "document_start"
         }
     ],
     "background": {
         "scripts": ["js/background.js"],
         "persistent": true
-    }
+    },
+    "permissions": [
+        "storage"
+    ]
 }
