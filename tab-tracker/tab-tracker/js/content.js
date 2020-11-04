@@ -1,0 +1,1 @@
+chrome.runtime.sendMessage({ type: "post", url: window.location.href, title: document.title });
