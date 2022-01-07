@@ -18,12 +18,12 @@ const SettingsSchema = object().shape({
 });
 
 export const Popup: FC = () => {
-  const [initialSettings, setInitialSettings] = useState<Settings>();
+  const [savedSettings, setSavedSettings] = useState<Settings>();
   const [switchOn, setSwitchOn] = useState<boolean>();
 
   useEffect(() => {
     chrome.storage.local.get("settings", ({ settings }) => {
-      setInitialSettings(settings);
+      setSavedSettings(settings);
     });
 
     chrome.storage.local.get("caller", ({ caller }) => {
@@ -31,20 +31,21 @@ export const Popup: FC = () => {
     });
   }, []);
 
-  if (typeof initialSettings !== "object" || typeof switchOn !== "boolean") {
+  if (typeof savedSettings !== "object" || typeof switchOn !== "boolean") {
     return null;
   }
 
   return (
     <>
       <Formik
-        initialValues={initialSettings}
+        initialValues={savedSettings}
         validationSchema={SettingsSchema}
         onSubmit={(values, { resetForm }) => {
           chrome.storage.local.set({
             settings: values,
           });
           resetForm({ values });
+          setSavedSettings(values);
         }}
       >
         {({ values, errors, touched, dirty, handleChange, handleSubmit }) => (
@@ -110,22 +111,27 @@ export const Popup: FC = () => {
 
             chrome.tabs.query(
               { active: true, currentWindow: true },
-              ([tabId]) => {
+              ([tab]) => {
                 chrome.storage.local.set({
                   caller: {
-                    tabId: newState ? tabId : undefined,
+                    tabId: newState ? tab.id : undefined,
                   },
                 });
               }
             );
 
             if (newState) {
-              chrome.tabs.query({}, (tabs) => {
-                console.log(tabs);
-                tabs.forEach((tab) => {
-                  chrome.tabs.sendMessage(tab.id, { type: "reload" });
-                });
-              });
+              chrome.tabs.query(
+                savedSettings.allTabs
+                  ? {}
+                  : { active: true, currentWindow: true },
+                (tabs) => {
+                  console.log(tabs);
+                  tabs.forEach((tab) => {
+                    chrome.tabs.sendMessage(tab.id, { type: "reload" });
+                  });
+                }
+              );
             }
 
             return newState;

@@ -23,7 +23,6 @@ chrome.storage.local.get("settings", ({ settings }) => {
 });
 
 chrome.storage.local.get("caller", ({ caller }) => {
-  console.log(caller);
   if (caller === undefined) {
     chrome.storage.local.set({
       caller: initialCaller,
