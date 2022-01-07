@@ -30,3 +30,22 @@ chrome.storage.local.get("caller", ({ caller }) => {
     });
   }
 });
+
+chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
+  chrome.storage.local.get("settings", ({ settings }) => {
+    chrome.storage.local.get("caller", ({ caller }) => {
+      if (
+        settings &&
+        settings.allTabs === false &&
+        caller &&
+        caller.tabId === tabId
+      ) {
+        chrome.storage.local.set({
+          caller: {
+            tabId: undefined,
+          },
+        });
+      }
+    });
+  });
+});
