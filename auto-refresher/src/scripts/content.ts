@@ -7,14 +7,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 chrome.storage.local.get("settings", ({ settings }) => {
   chrome.storage.local.get("caller", ({ caller }) => {
     chrome.runtime.sendMessage({ type: "getTabId" }, ({ tabId }) => {
-      if (
-        caller.tabId &&
-        (settings.allTabs || tabId === caller.tabId) &&
-        !document.documentElement.innerText.includes(settings.query)
-      ) {
+      if (caller.tabId && (settings.allTabs || tabId === caller.tabId)) {
         setTimeout(() => {
           chrome.storage.local.get("caller", ({ caller }) => {
-            if (caller.tabId) {
+            if (
+              !document.documentElement.innerText
+                .toLowerCase()
+                .includes(settings.query.toLowerCase()) &&
+              caller.tabId
+            ) {
               location.reload();
             }
           });

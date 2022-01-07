@@ -2,12 +2,15 @@ import React, { FC, useEffect, useState } from "react";
 import { Formik } from "formik";
 import { object, string, number, boolean } from "yup";
 import {
+  EuiPanel,
   EuiForm,
   EuiFormRow,
   EuiTextColor,
   EuiFieldText,
   EuiCheckbox,
   EuiButton,
+  EuiSpacer,
+  EuiFlexGroup,
   EuiSwitch,
 } from "@elastic/eui";
 
@@ -36,7 +39,12 @@ export const Popup: FC = () => {
   }
 
   return (
-    <>
+    <EuiPanel
+      paddingSize="l"
+      hasBorder={false}
+      hasShadow={false}
+      color="transparent"
+    >
       <Formik
         initialValues={savedSettings}
         validationSchema={SettingsSchema}
@@ -102,42 +110,47 @@ export const Popup: FC = () => {
           </EuiForm>
         )}
       </Formik>
-      <EuiSwitch
-        label=""
-        checked={switchOn}
-        onChange={() => {
-          setSwitchOn((prevState) => {
-            const newState = !prevState;
+      <EuiSpacer size="xl" />
+      <EuiFlexGroup justifyContent="center">
+        <EuiFormRow>
+          <EuiSwitch
+            label=""
+            checked={switchOn}
+            onChange={() => {
+              setSwitchOn((prevState) => {
+                const newState = !prevState;
 
-            chrome.tabs.query(
-              { active: true, currentWindow: true },
-              ([tab]) => {
-                chrome.storage.local.set({
-                  caller: {
-                    tabId: newState ? tab.id : undefined,
-                  },
-                });
-              }
-            );
+                chrome.tabs.query(
+                  { active: true, currentWindow: true },
+                  ([tab]) => {
+                    chrome.storage.local.set({
+                      caller: {
+                        tabId: newState ? tab.id : undefined,
+                      },
+                    });
+                  }
+                );
 
-            if (newState) {
-              chrome.tabs.query(
-                savedSettings.allTabs
-                  ? {}
-                  : { active: true, currentWindow: true },
-                (tabs) => {
-                  console.log(tabs);
-                  tabs.forEach((tab) => {
-                    chrome.tabs.sendMessage(tab.id, { type: "reload" });
-                  });
+                if (newState) {
+                  chrome.tabs.query(
+                    savedSettings.allTabs
+                      ? {}
+                      : { active: true, currentWindow: true },
+                    (tabs) => {
+                      console.log(tabs);
+                      tabs.forEach((tab) => {
+                        chrome.tabs.sendMessage(tab.id, { type: "reload" });
+                      });
+                    }
+                  );
                 }
-              );
-            }
 
-            return newState;
-          });
-        }}
-      />
-    </>
+                return newState;
+              });
+            }}
+          />
+        </EuiFormRow>
+      </EuiFlexGroup>
+    </EuiPanel>
   );
 };
