@@ -15,7 +15,9 @@
     "@types/react-dom": "^16.9.6",
     "@typescript-eslint/eslint-plugin": "^5.9.0",
     "@typescript-eslint/parser": "^5.9.0",
+    "css-loader": "5.2.7",
     "eslint": "^8.6.0",
+    "style-loader": "2.0.0",
     "ts-loader": "^4.0.1",
     "typescript": "^3.8.0",
     "webpack": "^4.42.1",
@@ -23,7 +25,14 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "@elastic/datemath": "^5.0.3",
+    "@elastic/eui": "^43.1.1",
+    "@emotion/react": "^11.7.1",
+    "formik": "^2.2.9",
+    "moment": "^2.29.1",
+    "prop-types": "^15.8.0",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "yup": "^0.32.11"
   }
 }
