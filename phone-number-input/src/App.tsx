@@ -74,7 +74,13 @@ export const App: FC = () => {
                 value={values.phone_number}
                 placeholder="Enter Phone Number"
                 prepend={<EuiIcon type="logoElasticsearch" size="xl" />}
-                append={<EuiButtonIcon type="submit" iconType="sortRight" />}
+                append={
+                  <EuiButtonIcon
+                    type="submit"
+                    aria-label="submit"
+                    iconType="sortRight"
+                  />
+                }
                 autoFocus={true}
                 compressed={true}
               />
