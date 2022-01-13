@@ -13,13 +13,20 @@ export const App: FC = () => {
   const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
-    if (clicks === 1) {
-      setSeconds((prevState) => prevState + 1 / 120);
-      setInterval(() => {
-        setSeconds((prevState) => prevState + 1 / 120);
+    if (clicks === 1 && seconds === 0) {
+      const interval = setInterval(() => {
+        setSeconds((prevState) => {
+          const newState = Math.min(prevState + 1 / 120, 10);
+
+          if (newState === 10) {
+            clearInterval(interval);
+          }
+
+          return newState;
+        });
       }, 1000 / 120);
     }
-  }, [clicks]);
+  }, [clicks, seconds]);
 
   return (
     <EuiPanel
@@ -32,9 +39,27 @@ export const App: FC = () => {
         <EuiFlexItem>
           <EuiButton
             onClick={() => setClicks((prevState) => prevState + 1)}
+            disabled={seconds === 10}
             fill={true}
           >
-            {clicks === 0 ? "Click To Start" : "Keep Clicking"}
+            {clicks === 0
+              ? "Click To Start"
+              : seconds < 10
+              ? "Keep Clicking"
+              : "Done!"}
+          </EuiButton>
+        </EuiFlexItem>
+        <EuiFlexItem>
+          <EuiButton
+            onClick={() => {
+              setClicks(0);
+              setSeconds(0);
+            }}
+            disabled={seconds < 10}
+            fill={true}
+            color="danger"
+          >
+            Restart
           </EuiButton>
         </EuiFlexItem>
       </EuiFlexGroup>
@@ -63,7 +88,7 @@ export const App: FC = () => {
             iconType="popout"
             size="s"
           >
-            Button 1
+            Click Speed Test
           </EuiButton>
         </EuiFlexItem>
         <EuiFlexItem>
@@ -73,7 +98,7 @@ export const App: FC = () => {
             iconType="popout"
             size="s"
           >
-            Button 2
+            Space Bar Clicker
           </EuiButton>
         </EuiFlexItem>
       </EuiFlexGroup>

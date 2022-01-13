@@ -1,6 +1,6 @@
 {
   "name": "clicks-per-second-tester",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "dependencies": {
     "@elastic/datemath": "^5.0.3",
