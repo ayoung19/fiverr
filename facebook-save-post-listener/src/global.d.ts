@@ -1,0 +1,3 @@
+interface Settings {
+  endpoint: string;
+}

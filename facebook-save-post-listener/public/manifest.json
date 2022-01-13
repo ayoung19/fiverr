@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+
+  "name": "Facebook Save Post Listener",
+  "description": "Facebook Save Post Listener",
+  "version": "1.0.0",
+
+  "browser_action": {
+    "default_popup": "index.html"
+  },
+
+  "background": {
+    "scripts": ["./static/js/background.js"],
+    "persistent": false
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://*.facebook.com/*"],
+      "js": ["./static/js/content.js"]
+    }
+  ],
+
+  "icons": {
+    "16": "logo192.png",
+    "48": "logo192.png",
+    "128": "logo192.png"
+  },
+
+  "permissions": ["storage"]
+}
