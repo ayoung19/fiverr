@@ -27,5 +27,5 @@
     "128": "logo192.png"
   },
 
-  "permissions": ["storage"]
+  "permissions": ["storage", "https://*/"]
 }
