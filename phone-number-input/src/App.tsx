@@ -1,5 +1,5 @@
-import React, { FC } from "react";
-import { Formik } from "formik";
+import React, { FC, useEffect, useState } from "react";
+import { Form, Formik } from "formik";
 import { object, string } from "yup";
 import {
   EuiPanel,
@@ -10,6 +10,10 @@ import {
   EuiIcon,
   EuiButtonIcon,
 } from "@elastic/eui";
+
+interface Form {
+  phone_number: string;
+}
 
 const FormInitial = { phone_number: "" };
 
@@ -31,63 +35,84 @@ const FormSchema = object().shape({
 });
 
 export const App: FC = () => {
+  const [savedForm, setSavedForm] = useState<Form | null>(null);
+
+  useEffect(() => {
+    chrome.storage.local.get("form", ({ form }) => {
+      if (form === undefined) {
+        chrome.storage.local.set({
+          form: FormInitial,
+        });
+      }
+      setSavedForm(form ? form : FormInitial);
+    });
+  }, []);
+
   return (
-    <EuiPanel
-      paddingSize="m"
-      hasBorder={false}
-      hasShadow={false}
-      color="transparent"
-    >
-      <Formik
-        initialValues={FormInitial}
-        validationSchema={FormSchema}
-        onSubmit={(values, { resetForm }) => {
-          const stripped = values.phone_number.replace(/[^0-9]/g, "");
-          alert(
-            `https://ping.server.com?ID=${values.phone_number}&N=${stripped}`
-          );
-          fetch(
-            `https://ping.server.com?ID=${values.phone_number}&N=${stripped}`
-          )
-            .then((response) => response.json())
-            .then((data) => console.log(data));
-          resetForm({ values: FormInitial });
-        }}
+    savedForm && (
+      <EuiPanel
+        paddingSize="m"
+        hasBorder={false}
+        hasShadow={false}
+        color="transparent"
       >
-        {({ values, errors, touched, handleChange, handleSubmit }) => (
-          <EuiForm component="form" onSubmit={handleSubmit}>
-            <EuiFormRow
-              helpText={
-                errors.phone_number &&
-                touched.phone_number && (
-                  <EuiTextColor color="danger">
-                    {errors.phone_number}
-                  </EuiTextColor>
-                )
-              }
-            >
-              <EuiFieldText
-                name="phone_number"
-                type="text"
-                onChange={handleChange}
-                isInvalid={!!errors.phone_number && touched.phone_number}
-                value={values.phone_number}
-                placeholder="Enter Phone Number"
-                prepend={<EuiIcon type="logoElasticsearch" size="xl" />}
-                append={
-                  <EuiButtonIcon
-                    type="submit"
-                    aria-label="submit"
-                    iconType="sortRight"
-                  />
+        <Formik
+          initialValues={savedForm}
+          validationSchema={FormSchema}
+          onSubmit={(values, { resetForm }) => {
+            const stripped = values.phone_number.replace(/[^0-9]/g, "");
+            fetch(
+              `https://get.icheckup.com/Request.aspx?ID=${values.phone_number}&N=${stripped}`
+            )
+              .then((response) => response.json())
+              .then((data) => console.log(data));
+
+            chrome.storage.local.set({
+              form: {
+                phone_number: stripped,
+              },
+            });
+
+            resetForm({ values: { phone_number: stripped } });
+            // window.close();
+          }}
+        >
+          {({ values, errors, touched, dirty, handleChange, handleSubmit }) => (
+            <EuiForm component="form" onSubmit={handleSubmit}>
+              <EuiFormRow
+                helpText={
+                  errors.phone_number &&
+                  touched.phone_number && (
+                    <EuiTextColor color="danger">
+                      {errors.phone_number}
+                    </EuiTextColor>
+                  )
                 }
-                autoFocus={true}
-                compressed={true}
-              />
-            </EuiFormRow>
-          </EuiForm>
-        )}
-      </Formik>
-    </EuiPanel>
+              >
+                <EuiFieldText
+                  name="phone_number"
+                  type="text"
+                  onChange={handleChange}
+                  isInvalid={!!errors.phone_number && touched.phone_number}
+                  value={values.phone_number}
+                  placeholder="Enter Phone Number"
+                  prepend={<EuiIcon type="logoElasticsearch" size="xl" />}
+                  append={
+                    <EuiButtonIcon
+                      type="submit"
+                      aria-label="submit"
+                      iconType="sortRight"
+                      disabled={!dirty}
+                    />
+                  }
+                  autoFocus={true}
+                  compressed={true}
+                />
+              </EuiFormRow>
+            </EuiForm>
+          )}
+        </Formik>
+      </EuiPanel>
+    )
   );
 };
