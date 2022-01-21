@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Formik } from "formik";
 import { object, string } from "yup";
 import {
@@ -13,11 +13,10 @@ import {
   EuiFlexItem,
   EuiText,
   EuiSpacer,
+  EuiGlobalToastList,
 } from "@elastic/eui";
-
-interface Store {
-  id: string;
-}
+import { Toast } from "@elastic/eui/src/components/toast/global_toast_list";
+import { v4 } from "uuid";
 
 const FormInitial = { phone_number: "" };
 
@@ -41,6 +40,7 @@ const FormSchema = object().shape({
 export const App: FC = () => {
   const [storedId, setStoredId] = useState<string>();
   const [accountId, setAccountId] = useState<string>("");
+  const [toasts, setToasts] = useState<Toast[]>([]);
 
   useEffect(() => {
     chrome.storage.local.get("store", ({ store }) => {
@@ -66,6 +66,15 @@ export const App: FC = () => {
       hasShadow={false}
       color="transparent"
     >
+      <EuiGlobalToastList
+        toasts={toasts}
+        dismissToast={(removedToast) => {
+          setToasts((prevState) =>
+            prevState.filter((toast) => toast.id !== removedToast.id)
+          );
+        }}
+        toastLifeTimeMs={1000}
+      />
       {storedId.length === 0 ? (
         <EuiForm
           component="form"
@@ -88,6 +97,7 @@ export const App: FC = () => {
                   type="submit"
                   aria-label="submit"
                   iconType="sortRight"
+                  disabled={accountId.length === 0}
                 />
               }
               autoFocus={true}
@@ -124,14 +134,34 @@ export const App: FC = () => {
             validationSchema={FormSchema}
             onSubmit={(values, { resetForm }) => {
               const stripped = values.phone_number.replace(/[^0-9]/g, "");
-              alert(
-                `https://get.icheckup.com/Request.aspx?ID=${storedId}&N=${stripped}`
-              );
               fetch(
-                `https://get.icheckup.com/Request.aspx?ID=${storedId}&N=${stripped}`
+                `https://get.icheckup.com/request.asmx/Feedback?id=${storedId}&n=${stripped}`
               )
-                .then((response) => response.json())
-                .then((data) => console.log(data));
+                .then((response) => response.text())
+                .then((data) => {
+                  console.log(data);
+                  if (data.toLowerCase().includes("success")) {
+                    setToasts((prevState) =>
+                      prevState.concat({
+                        id: v4(),
+                        title: "Success",
+                        text: "Request was successfully sent!",
+                        color: "success",
+                        iconType: "check",
+                      })
+                    );
+                  } else {
+                    setToasts((prevState) =>
+                      prevState.concat({
+                        id: v4(),
+                        title: "Error",
+                        text: "Request was not sent. Please check your configuration.",
+                        color: "danger",
+                        iconType: "alert",
+                      })
+                    );
+                  }
+                });
               resetForm({ values: FormInitial });
             }}
           >
