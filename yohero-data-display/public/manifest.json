@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+
+  "name": "Yohero Data Display",
+  "description": "Yohero Data Display",
+  "version": "1.0.0",
+
+  "background": {
+    "service_worker": "./static/js/background.js"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["./static/js/content.js"]
+    }
+  ],
+
+  "icons": {
+    "16": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
+  },
+
+  "permissions": ["storage"],
+  "host_permissions": ["https://get.icheckup.com/*"]
+}
