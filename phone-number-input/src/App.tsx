@@ -138,7 +138,6 @@ export const App: FC = () => {
               )
                 .then((response) => response.text())
                 .then((data) => {
-                  console.log(data);
                   if (data.toLowerCase().includes("success")) {
                     setToasts((prevState) =>
                       prevState.concat({

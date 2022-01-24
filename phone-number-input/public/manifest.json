@@ -16,5 +16,6 @@
     "128": "logo.png"
   },
 
-  "permissions": ["storage", "https://get.icheckup.com/*"]
+  "permissions": ["storage"],
+  "host_permissions": ["https://get.icheckup.com/*"]
 }
