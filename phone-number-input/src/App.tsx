@@ -14,6 +14,7 @@ import {
   EuiText,
   EuiSpacer,
   EuiGlobalToastList,
+  EuiImage,
 } from "@elastic/eui";
 import { Toast } from "@elastic/eui/src/components/toast/global_toast_list";
 import { v4 } from "uuid";
@@ -23,7 +24,7 @@ const FormInitial = { phone_number: "" };
 const FormSchema = object().shape({
   phone_number: string().test(
     "is-phone-number",
-    "phone_number must contain 10 digits and the first one can't be a 0 or 1",
+    "Please enter a valid phone number.",
     (value) => {
       if (!value) {
         return false;
@@ -110,10 +111,8 @@ export const App: FC = () => {
           <EuiFlexGroup justifyContent="spaceBetween" responsive={false}>
             <EuiFlexItem grow={false}>
               <EuiText size="s">
-                <dl>
-                  <dt>Account ID</dt>
-                  <dd>{storedId}</dd>
-                </dl>
+                <b>Account ID: </b>
+                <span>{storedId}</span>
               </EuiText>
             </EuiFlexItem>
             <EuiFlexItem grow={false}>
@@ -128,7 +127,7 @@ export const App: FC = () => {
               />
             </EuiFlexItem>
           </EuiFlexGroup>
-          <EuiSpacer />
+          <EuiSpacer size="m" />
           <Formik
             initialValues={FormInitial}
             validationSchema={FormSchema}
@@ -184,7 +183,17 @@ export const App: FC = () => {
                     isInvalid={!!errors.phone_number && touched.phone_number}
                     value={values.phone_number}
                     placeholder="Enter Phone Number"
-                    prepend={<EuiIcon type="logoElasticsearch" size="xl" />}
+                    prepend={
+                      <EuiPanel
+                        paddingSize="s"
+                        hasBorder={false}
+                        hasShadow={false}
+                        color="transparent"
+                        grow={false}
+                      >
+                        <EuiImage size={16} alt="logo" src="./logo.png" />
+                      </EuiPanel>
+                    }
                     append={
                       <EuiButtonIcon
                         type="submit"
