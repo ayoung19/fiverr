@@ -27,10 +27,6 @@ export const App: FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [copied, setCopied] = useState<string>();
 
-  useEffect(() => {
-    navigator.clipboard.readText().then((text) => setCopied(text));
-  }, []);
-
   return (
     <EuiPanel
       hasShadow={false}
