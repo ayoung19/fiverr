@@ -40,19 +40,14 @@ const FormSchema = object().shape({
 
 export const App: FC = () => {
   const [storedId, setStoredId] = useState<string>();
+  const [storedName, setStoredName] = useState<string>();
   const [accountId, setAccountId] = useState<string>("");
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   useEffect(() => {
-    chrome.storage.local.get("store", ({ store }) => {
-      if (store === undefined) {
-        chrome.storage.local.set({
-          store: {
-            id: "",
-          },
-        });
-      }
-      setStoredId(store ? store.id : "");
+    chrome.storage.local.get("store", ({ store = { id: "", name: "" } }) => {
+      setStoredId(store.id);
+      setStoredName(store.name);
     });
   }, []);
 
@@ -79,9 +74,29 @@ export const App: FC = () => {
       {storedId.length === 0 ? (
         <EuiForm
           component="form"
-          onSubmit={() => {
-            chrome.storage.local.set({ store: { id: accountId } });
-            setStoredId(accountId);
+          onSubmit={(event) => {
+            event.preventDefault();
+            fetch(`https://get.icheckup.com/request.asmx/ID?id=${accountId}`)
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.Valid === "Yes") {
+                  chrome.storage.local.set({
+                    store: { id: accountId, name: data.Message },
+                  });
+                  setStoredId(accountId);
+                  setStoredName(data.Message);
+                } else {
+                  setToasts((prevState) =>
+                    prevState.concat({
+                      id: v4(),
+                      title: "Error",
+                      text: data.Message,
+                      color: "danger",
+                      iconType: "alert",
+                    })
+                  );
+                }
+              });
           }}
         >
           <EuiFormRow>
@@ -111,8 +126,7 @@ export const App: FC = () => {
           <EuiFlexGroup justifyContent="spaceBetween" responsive={false}>
             <EuiFlexItem grow={false}>
               <EuiText size="s">
-                <b>Account ID: </b>
-                <span>{storedId}</span>
+                <span>{storedName}</span>
               </EuiText>
             </EuiFlexItem>
             <EuiFlexItem grow={false}>
@@ -120,6 +134,7 @@ export const App: FC = () => {
                 onClick={() => {
                   setAccountId(storedId);
                   setStoredId("");
+                  setStoredName("");
                 }}
                 iconType="pencil"
                 color="warning"
