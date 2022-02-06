@@ -1,9 +1,13 @@
 {
   "manifest_version": 3,
-
-  "name": "Yohero Data Display",
-  "description": "Yohero Data Display",
+  "name": "React Typescript Chrome Extension Boilerplate",
+  "description": "Minimal boilerplate for making chrome extensions using React and TypeScript",
   "version": "1.0.0",
+
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Open the popup"
+  },
 
   "background": {
     "service_worker": "./static/js/background.js"
@@ -17,11 +21,8 @@
   ],
 
   "icons": {
-    "16": "logo.png",
-    "48": "logo.png",
-    "128": "logo.png"
-  },
-
-  "permissions": ["storage"],
-  "host_permissions": ["https://get.icheckup.com/*"]
+    "16": "logo192.png",
+    "48": "logo192.png",
+    "128": "logo192.png"
+  }
 }
