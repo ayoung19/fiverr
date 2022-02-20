@@ -15,7 +15,7 @@
 
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
+      "matches": ["http://bscscan.com/*", "https://bscscan.com/*"],
       "js": ["./static/js/content.js"]
     }
   ],
@@ -24,5 +24,24 @@
     "16": "logo192.png",
     "48": "logo192.png",
     "128": "logo192.png"
-  }
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "genesis.png",
+        "qi.png",
+        "shaman.png",
+        "mage.png",
+        "warrior.png",
+        "priest.png",
+        "warlock.png",
+        "knight.png",
+        "assassin.png"
+      ],
+      "matches": ["http://bscscan.com/*", "https://bscscan.com/*"]
+    }
+  ],
+
+  "permissions": ["storage", "tabs"]
 }

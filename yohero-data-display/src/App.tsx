@@ -1,26 +1,39 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import React, { FC, useEffect, useState } from "react";
+import { EuiPanel, EuiButton } from "@elastic/eui";
 
-function App() {
+export const App: FC = () => {
+  const [active, setActive] = useState(false);
+
+  useEffect(() => {
+    chrome.storage.local.get("store", ({ store }) => {
+      if (store !== undefined) {
+        setActive(store);
+      }
+    });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <EuiPanel hasShadow={false} hasBorder={false} color="transparent">
+      <EuiButton
+        fill={active}
+        color={active ? "success" : "danger"}
+        onClick={() => {
+          setActive((prevState) => {
+            chrome.storage.local.set({ store: !prevState }, () => {
+              console.log("lmao");
+              chrome.tabs.query({}, (tabs) => {
+                tabs.forEach((tab) => {
+                  chrome.tabs.sendMessage(Number(tab.id), { type: "recheck" });
+                });
+              });
+            });
+            return !prevState;
+          });
+        }}
+        fullWidth={true}
+      >
+        {active ? "Active" : "Inactive"}
+      </EuiButton>
+    </EuiPanel>
   );
-}
-
-export default App;
+};
