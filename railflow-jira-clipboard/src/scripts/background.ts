@@ -1,3 +1,16 @@
-import { capitalize } from "../utils";
+import Papa from "papaparse";
 
-console.log(capitalize("hello from the background script!"));
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "copy") {
+    fetch(message.url)
+      .then((response) => response.blob())
+      .then((blob) => blob.text())
+      .then((data) =>
+        sendResponse(Papa.unparse(Papa.parse(data).data, { delimiter: "\x09" }))
+      );
+  }
+
+  return true;
+});
+
+export {};
