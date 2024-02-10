@@ -5,20 +5,22 @@
   "version": "1.0.0",
 
   "action": {
-    "default_popup": "index.html",
+    "default_popup": "./popup/index.html",
     "default_title": "Open the popup"
   },
 
   "background": {
-    "service_worker": "./static/js/background.js"
+    "service_worker": "./scripts/background.js"
   },
 
   "content_scripts": [
     {
       "matches": ["http://*/*", "https://*/*"],
-      "js": ["./static/js/content.js"]
+      "js": ["./scripts/content.js"]
     }
   ],
+
+  "permissions": ["storage", "offscreen"],
 
   "icons": {
     "16": "logo192.png",

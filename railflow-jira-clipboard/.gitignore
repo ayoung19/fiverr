@@ -10,6 +10,9 @@
 
 # production
 /build
+/dist/offscreen
+/dist/popup
+/dist/scripts
 
 # misc
 .DS_Store

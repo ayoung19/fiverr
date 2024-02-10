@@ -1,12 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import { Offscreen } from "./Offscreen";
+import { Popup } from "./Popup";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    {process.env.REACT_APP_BUILD_TARGET === "offscreen" ? (
+      <Offscreen />
+    ) : (
+      <Popup />
+    )}
   </React.StrictMode>,
   document.getElementById("root")
 );

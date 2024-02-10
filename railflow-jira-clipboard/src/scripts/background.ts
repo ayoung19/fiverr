@@ -1,5 +1,13 @@
 import Papa from "papaparse";
 
+chrome.runtime.onInstalled.addListener(async () => {
+  await chrome.offscreen.createDocument({
+    url: "offscreen/index.html",
+    reasons: [chrome.offscreen.Reason.CLIPBOARD],
+    justification: "Write text to the clipboard.",
+  });
+});
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "copy") {
     fetch(message.url)
