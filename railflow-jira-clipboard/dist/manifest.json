@@ -20,7 +20,7 @@
     }
   ],
 
-  "permissions": ["storage", "offscreen"],
+  "permissions": ["storage", "offscreen", "clipboardRead", "clipboardWrite"],
 
   "icons": {
     "16": "logo192.png",

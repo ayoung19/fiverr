@@ -26,11 +26,12 @@ if (atlassianToken !== null) {
 
           chrome.runtime.sendMessage(
             {
-              type: "copy",
-              url: `${window.location.origin}/sr/jira.issueviews:searchrequest-csv-all-fields/temp/SearchRequest.csv?jqlQuery=project+%3D+%22${project}%22+ORDER+BY+created+DESC&atl_token=${token}&tempMax=1000`,
+              type: "request",
+              origin: window.location.origin,
+              project,
+              token,
             },
-            (response) => {
-              navigator.clipboard.writeText(response);
+            () => {
               setButtonText(button, "Copy CSV");
             }
           );
