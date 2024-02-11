@@ -4,6 +4,7 @@ import reportWebVitals from "./reportWebVitals";
 import { Offscreen } from "./Offscreen";
 import { Popup } from "./Popup";
 import { MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
@@ -15,6 +16,7 @@ ReactDOM.render(
     ) : (
       <MantineProvider withGlobalStyles withNormalizeCSS>
         <QueryClientProvider client={queryClient}>
+          <Notifications />
           <Popup />
         </QueryClientProvider>
       </MantineProvider>

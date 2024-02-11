@@ -75,7 +75,9 @@ const handleMessage = async (
       return null;
     }
 
-    if (getTransformedCsv({...rest, originalCsv, project}) !== message.value) {
+    if (
+      getTransformedCsv({ ...rest, originalCsv, project }) !== message.value
+    ) {
       await setStoredState({
         ...rest,
         originalCsv: undefined,
@@ -87,10 +89,10 @@ const handleMessage = async (
   }
 
   if (message.type === "forwardCopy") {
-    const response = await chrome.runtime.sendMessage({
+    const response = (await chrome.runtime.sendMessage({
       type: "copy",
       value: message.value,
-    }) as true | null;
+    })) as true | null;
 
     return response;
   }

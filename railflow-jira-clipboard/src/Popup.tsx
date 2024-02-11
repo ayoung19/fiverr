@@ -7,11 +7,8 @@ import {
   Group,
   TextInput,
   LoadingOverlay,
-  MultiSelect,
-  ScrollArea,
   Stack,
   Title,
-  UnstyledButton,
   Container,
   Text,
   Box,
@@ -19,37 +16,25 @@ import {
   ActionIcon,
 } from "@mantine/core";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { StoredState, getStoredState, setStoredState } from "./utils";
+import {
+  StoredState,
+  getStoredState,
+  getTransformedCsv,
+  setStoredState,
+} from "./utils";
 import {
   IconAlertCircle,
   IconCircleX,
-  IconCircleXFilled,
   IconInfoCircle,
   IconSearch,
 } from "@tabler/icons-react";
 import { useState } from "react";
-import Papa from "papaparse";
+import { notifications } from "@mantine/notifications";
 
 const updateStoredState = async (storedState: Required<StoredState>) => {
-  const activeColumns = Object.entries(
-    storedState.projectToColumnSettings[storedState.project]
-  )
-    .filter(([_, v]) => v)
-    .map(([k, _]) => k)
-    .sort((a, b) => a.localeCompare(b));
-
   await chrome.runtime.sendMessage({
     type: "forwardCopy",
-    value: Papa.unparse(
-      {
-        data: Papa.parse(storedState.originalCsv, { header: true }).data,
-        fields: activeColumns,
-      },
-      {
-        newline: "\n",
-        delimiter: "\x09",
-      }
-    ),
+    value: getTransformedCsv(storedState),
   });
 
   await setStoredState(storedState);
@@ -90,7 +75,7 @@ export const Popup = () => {
   if (originalCsv === undefined || project == undefined) {
     return (
       <Alert icon={<IconInfoCircle size="1rem" />} title="Warning!">
-        Copy a CSV using this extension to change paste options.
+        Copy CSV using this extension to change paste options.
       </Alert>
     );
   }
@@ -147,19 +132,26 @@ export const Popup = () => {
               {selectedColumns.map(([k, v]) => (
                 <Button
                   variant="subtle"
-                  onClick={() =>
-                    storedStateMutation.mutate({
-                      originalCsv,
-                      project,
-                      projectToColumnSettings: {
-                        ...projectToColumnSettings,
-                        [project]: {
-                          ...projectToColumnSettings[project],
-                          [k]: !projectToColumnSettings[project][k],
+                  onClick={() => {
+                    if (selectedColumns.length === 1) {
+                      notifications.show({
+                        title: "Warning",
+                        message: "At least one column must be selected.",
+                      });
+                    } else {
+                      storedStateMutation.mutate({
+                        originalCsv,
+                        project,
+                        projectToColumnSettings: {
+                          ...projectToColumnSettings,
+                          [project]: {
+                            ...projectToColumnSettings[project],
+                            [k]: !projectToColumnSettings[project][k],
+                          },
                         },
-                      },
-                    })
-                  }
+                      });
+                    }
+                  }}
                   sx={{
                     ".mantine-Button-inner": {
                       justifyContent: "flex-start",
