@@ -1,4 +1,6 @@
-interface StoredState {
+import Papa from "papaparse";
+
+export interface StoredState {
   originalCsv?: string;
   project?: string;
   projectToColumnSettings: {
@@ -30,7 +32,24 @@ export const getStoredState = async () => {
   return state as StoredState;
 };
 
-export type Message =
+export const getTransformedCsv = (storedState: Required<StoredState>) =>
+  Papa.unparse(
+    {
+      data: Papa.parse(storedState.originalCsv, { header: true }).data,
+      fields: Object.entries(
+        storedState.projectToColumnSettings[storedState.project]
+      )
+        .filter(([_, v]) => v)
+        .map(([k, _]) => k)
+        .sort((a, b) => a.localeCompare(b)),
+    },
+    {
+      newline: "\n",
+      delimiter: "\x09",
+    }
+  );
+
+export type MessageToBackground =
   | {
       type: "request";
       origin: string;
@@ -41,3 +60,9 @@ export type Message =
       type: "clipboardValue";
       value: string;
     }
+  | {
+      type: "forwardCopy";
+      value: string;
+    };
+
+export type MessageToOffscreen = { type: "copy"; value: string };

@@ -1,7 +1,8 @@
 import Papa from "papaparse";
 import {
-  Message,
+  MessageToBackground,
   getStoredState,
+  getTransformedCsv,
   initializeStoredState,
   setStoredState,
 } from "../utils";
@@ -22,7 +23,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 const handleMessage = async (
-  message: Message,
+  message: MessageToBackground,
   sender: chrome.runtime.MessageSender
 ) => {
   if (message.type === "request") {
@@ -38,10 +39,12 @@ const handleMessage = async (
       return null;
     }
 
-    const storedState = await getStoredState();
+    const prevStoredState = await getStoredState();
 
-    if (storedState.projectToColumnSettings[message.project] === undefined) {
-      storedState.projectToColumnSettings[message.project] =
+    if (
+      prevStoredState.projectToColumnSettings[message.project] === undefined
+    ) {
+      prevStoredState.projectToColumnSettings[message.project] =
         parseResult.meta.fields.reduce((acc, curr) => {
           acc[curr] = true;
 
@@ -49,62 +52,48 @@ const handleMessage = async (
         }, {} as { [key: string]: boolean });
     }
 
-    storedState.originalCsv = Papa.unparse(Papa.parse(data).data);
-    storedState.project = message.project;
-
-    await setStoredState(storedState);
-
-    const activeColumns = Object.entries(
-      storedState.projectToColumnSettings[message.project]
-    )
-      .filter(([_, v]) => v)
-      .map(([k, _]) => k);
+    const newStoredState = {
+      ...prevStoredState,
+      originalCsv: data,
+      project: message.project,
+    };
 
     chrome.runtime.sendMessage({
       type: "copy",
-      value: Papa.unparse(Papa.parse(storedState.originalCsv).data, {
-        newline: "\n",
-        delimiter: "\x09",
-        columns: activeColumns,
-      }),
+      value: getTransformedCsv(newStoredState),
     });
 
-    return null;
+    await setStoredState(newStoredState);
+
+    return true;
   }
 
   if (message.type === "clipboardValue") {
-    const storedState = await getStoredState();
+    const { originalCsv, project, ...rest } = await getStoredState();
 
-    if (
-      storedState.originalCsv === undefined ||
-      storedState.project === undefined
-    ) {
+    if (originalCsv === undefined || project === undefined) {
       return null;
     }
 
-    const activeColumns = Object.entries(
-      storedState.projectToColumnSettings[storedState.project]
-    )
-      .filter(([_, v]) => v)
-      .map(([k, _]) => k);
-
-    if (
-      Papa.unparse(Papa.parse(storedState.originalCsv).data, {
-        newline: "\n",
-        delimiter: "\x09",
-        columns: activeColumns,
-      }) !== message.value
-    ) {
-      console.log("removing data");
+    if (getTransformedCsv({...rest, originalCsv, project}) !== message.value) {
       await setStoredState({
-        ...storedState,
+        ...rest,
         originalCsv: undefined,
         project: undefined,
       });
     }
 
-    return null;
+    return true;
   }
 
-  console.log("BAD MESSAGE", message);
+  if (message.type === "forwardCopy") {
+    const response = await chrome.runtime.sendMessage({
+      type: "copy",
+      value: message.value,
+    }) as true | null;
+
+    return response;
+  }
+
+  return null;
 };

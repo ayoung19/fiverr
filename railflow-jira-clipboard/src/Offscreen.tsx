@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { MessageToOffscreen } from "./utils";
 
 export const Offscreen = () => {
   const ref = useRef<HTMLTextAreaElement>(null);
@@ -16,7 +17,6 @@ export const Offscreen = () => {
   };
 
   const write = (value: string) => {
-    console.log(value.length)
     const { current } = ref;
 
     if (current === null) {
@@ -24,7 +24,6 @@ export const Offscreen = () => {
     }
 
     current.value = value;
-    console.log("after value set:", current.value.length)
     current.select();
     document.execCommand("copy");
   };
@@ -33,14 +32,19 @@ export const Offscreen = () => {
     setInterval(() => {
       const current = read();
 
-      chrome.runtime.sendMessage({type: "clipboardValue", value: current})
+      chrome.runtime.sendMessage({ type: "clipboardValue", value: current });
     }, 1000);
 
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-      if (message.type === "copy") {
-        write(message.value);
+    chrome.runtime.onMessage.addListener(
+      (message: MessageToOffscreen, sender, sendResponse) => {
+        if (message.type === "copy") {
+          write(message.value);
+          sendResponse(true);
+        }
+
+        return true;
       }
-    })
+    );
   }, []);
 
   return <textarea ref={ref}></textarea>;
