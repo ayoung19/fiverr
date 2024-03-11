@@ -8,10 +8,17 @@ export interface StoredState {
       [column: string]: boolean;
     };
   };
+  extensionSettings: {
+    cryptolens?: {
+      key: string;
+      expiresAt: number;
+    };
+  };
 }
 
 const initialStoredState: StoredState = {
   projectToColumnSettings: {},
+  extensionSettings: {},
 };
 
 export const initializeStoredState = async () => {
@@ -32,10 +39,27 @@ export const getStoredState = async () => {
   return state as StoredState;
 };
 
-export const getTransformedCsv = (storedState: Required<StoredState>) =>
-  Papa.unparse(
+export const isCryptolensKeyValid = (
+  cryptolens: StoredState["extensionSettings"]["cryptolens"]
+) => {
+  if (!cryptolens) {
+    return false;
+  }
+
+  return cryptolens.expiresAt > new Date().getTime();
+};
+
+export const getTransformedCsv = (storedState: Required<StoredState>) => {
+  const parseResult = Papa.parse(storedState.originalCsv, { header: true });
+
+  const transformedCsv = Papa.unparse(
     {
-      data: Papa.parse(storedState.originalCsv, { header: true }).data,
+      data: parseResult.data.slice(
+        0,
+        isCryptolensKeyValid(storedState.extensionSettings.cryptolens)
+          ? parseResult.data.length
+          : 25
+      ),
       fields: Object.entries(
         storedState.projectToColumnSettings[storedState.project]
       )
@@ -48,6 +72,13 @@ export const getTransformedCsv = (storedState: Required<StoredState>) =>
       delimiter: "\x09",
     }
   );
+
+  if (!isCryptolensKeyValid(storedState.extensionSettings.cryptolens)) {
+    return transformedCsv.concat("\nThe free version of the extension is limited to 25 rows.")
+  }
+
+  return transformedCsv
+};
 
 export type MessageToBackground =
   | {
