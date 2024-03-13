@@ -49,17 +49,20 @@ export const isCryptolensKeyValid = (
   return cryptolens.expiresAt > new Date().getTime();
 };
 
-export const getTransformedCsv = (storedState: Required<StoredState>) => {
+export const getTransformedCsv = (
+  storedState: Required<StoredState>,
+  options?: { isCryptolensKeyValidOverride?: boolean }
+) => {
   const parseResult = Papa.parse(storedState.originalCsv, { header: true });
+
+  const valid =
+    options?.isCryptolensKeyValidOverride === undefined
+      ? isCryptolensKeyValid(storedState.extensionSettings.cryptolens)
+      : options.isCryptolensKeyValidOverride;
 
   const transformedCsv = Papa.unparse(
     {
-      data: parseResult.data.slice(
-        0,
-        isCryptolensKeyValid(storedState.extensionSettings.cryptolens)
-          ? parseResult.data.length
-          : 25
-      ),
+      data: parseResult.data.slice(0, valid ? parseResult.data.length : 25),
       fields: Object.entries(
         storedState.projectToColumnSettings[storedState.project]
       )
@@ -73,11 +76,13 @@ export const getTransformedCsv = (storedState: Required<StoredState>) => {
     }
   );
 
-  if (!isCryptolensKeyValid(storedState.extensionSettings.cryptolens)) {
-    return transformedCsv.concat("\nThe free version of the extension is limited to 25 rows.")
+  if (!valid) {
+    return transformedCsv.concat(
+      "\nThe free version of the extension is limited to 25 rows."
+    );
   }
 
-  return transformedCsv
+  return transformedCsv;
 };
 
 export type MessageToBackground =

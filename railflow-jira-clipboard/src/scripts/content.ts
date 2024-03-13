@@ -19,6 +19,7 @@ if (atlassianToken !== null) {
         const [_, project] = match;
 
         const button = document.createElement("button");
+        button.classList.add("css-1luyhz2");
         setButtonText(button, "Copy CSV");
 
         button.addEventListener("click", () => {

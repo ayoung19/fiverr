@@ -76,13 +76,35 @@ const handleMessage = async (
     }
 
     if (
-      getTransformedCsv({ ...rest, originalCsv, project }) !== message.value
+      message.value !==
+        getTransformedCsv(
+          { ...rest, originalCsv, project },
+          { isCryptolensKeyValidOverride: true }
+        ) &&
+      message.value !==
+        getTransformedCsv(
+          { ...rest, originalCsv, project },
+          { isCryptolensKeyValidOverride: false }
+        )
     ) {
       await setStoredState({
         ...rest,
         originalCsv: undefined,
         project: undefined,
       });
+
+      return true;
+    }
+
+    if (
+      message.value !== getTransformedCsv({ ...rest, originalCsv, project })
+    ) {
+      const response = (await chrome.runtime.sendMessage({
+        type: "copy",
+        value: getTransformedCsv({ ...rest, originalCsv, project }),
+      })) as true | null;
+
+      return response;
     }
 
     return true;

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getStoredState, setStoredState } from "./utils";
+import { getStoredState, isCryptolensKeyValid, setStoredState } from "./utils";
 import {
   Alert,
   Anchor,
@@ -15,7 +15,7 @@ import {
 } from "@mantine/core";
 import { IconAlertCircle, IconTrash } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 
 const CryptolensKeyResponse = z.object({
@@ -74,12 +74,17 @@ export const LicenseKeySettings = () => {
           }
 
           reset();
-          setCryptolensKey("");
         }),
     enabled: cryptolensKey.length > 0,
     retry: 1,
     refetchOnWindowFocus: false,
   });
+
+  useEffect(() => {
+    if (storedStateQuery.data?.extensionSettings.cryptolens?.key !== undefined) {
+      setCryptolensKey(storedStateQuery.data.extensionSettings.cryptolens.key);
+    }
+  }, [storedStateQuery.data?.extensionSettings.cryptolens?.key]);
 
   if (storedStateQuery.isLoading) {
     return <LoadingOverlay visible={true} overlayBlur={2} />;
@@ -104,14 +109,21 @@ export const LicenseKeySettings = () => {
             </Text>
             <Title order={6}>Status</Title>
             <Box>
-              {storedStateQuery.data.extensionSettings.cryptolens.expiresAt <
-              new Date().getTime() ? (
-                <Badge color="orange" variant="filled">
-                  Expired
+              {isCryptolensKeyValid(
+                storedStateQuery.data.extensionSettings.cryptolens
+              ) ? (
+                <Badge color="green" variant="filled">
+                  <>Valid until </>
+                  {new Date(
+                    storedStateQuery.data.extensionSettings.cryptolens.expiresAt
+                  ).toLocaleString()}
                 </Badge>
               ) : (
-                <Badge color="green" variant="filled">
-                  Valid
+                <Badge color="orange" variant="filled">
+                  <>Expired at</>
+                  {new Date(
+                    storedStateQuery.data.extensionSettings.cryptolens.expiresAt
+                  ).toLocaleString()}
                 </Badge>
               )}
             </Box>
@@ -120,12 +132,14 @@ export const LicenseKeySettings = () => {
             variant="light"
             color="red"
             leftIcon={<IconTrash size="1rem" />}
-            onClick={() =>
+            onClick={() => {
               storedStateMutation.mutate({
                 ...storedStateQuery.data,
                 extensionSettings: {},
-              })
-            }
+              });
+
+              setCryptolensKey("");
+            }}
           >
             Remove
           </Button>
