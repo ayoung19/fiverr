@@ -6,7 +6,6 @@ import {
   Badge,
   Box,
   Button,
-  Chip,
   LoadingOverlay,
   Stack,
   Text,
@@ -81,7 +80,9 @@ export const LicenseKeySettings = () => {
   });
 
   useEffect(() => {
-    if (storedStateQuery.data?.extensionSettings.cryptolens?.key !== undefined) {
+    if (
+      storedStateQuery.data?.extensionSettings.cryptolens?.key !== undefined
+    ) {
       setCryptolensKey(storedStateQuery.data.extensionSettings.cryptolens.key);
     }
   }, [storedStateQuery.data?.extensionSettings.cryptolens?.key]);
@@ -148,7 +149,13 @@ export const LicenseKeySettings = () => {
         <>
           <Text size="sm">
             Activate a license key to gain full access to the extension. Don't
-            have a license key? Obtain one <Anchor target="_blank">here</Anchor>
+            have a license key? Obtain one{" "}
+            <Anchor
+              href="https://app.hubspot.com/payments/nMGD2Q9KxGYkzHkR?referrer=PAYMENT_LINK"
+              target="_blank"
+            >
+              here
+            </Anchor>
             .
           </Text>
           <form

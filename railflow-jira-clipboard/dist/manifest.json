@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "React Typescript Chrome Extension Boilerplate",
-  "description": "Minimal boilerplate for making chrome extensions using React and TypeScript",
+  "name": "Railflow JIRA Power Copy Paster",
+  "description": "The Railflow JIRA Chrome Extension allows JIRA users to copy the entire results set of their JQL or Save Searched into Google Sheets, Excel, or SmartSheets.",
   "version": "1.0.0",
 
   "action": {

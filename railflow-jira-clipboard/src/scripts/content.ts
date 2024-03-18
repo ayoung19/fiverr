@@ -8,9 +8,7 @@ if (atlassianToken !== null) {
   const token = atlassianToken.getAttribute("content");
 
   if (token !== null) {
-    const container = document.querySelector(
-      "._1e0c1txw._2lx2vrvc._1n261q9c._2hwxidpf"
-    );
+    const container = document.querySelector("._1e0c1txw._2lx2vrvc._1n261q9c");
 
     if (container !== null) {
       const match = window.location.href.match(/projects\/(.*?)\/issues/);
