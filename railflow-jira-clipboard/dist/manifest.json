@@ -15,7 +15,7 @@
 
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
+      "matches": ["*://*.atlassian.net/*"],
       "js": ["./scripts/content.js"]
     }
   ],
